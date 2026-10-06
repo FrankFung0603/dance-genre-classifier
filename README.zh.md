@@ -6,7 +6,7 @@
 
 **主要結果（group split held-out 測試集）：** 三輪訓練 macro-F1 **0.619 → 0.823 → 0.879**（v3 與 v2 同測試集對比）。Unknown recall **1.000** —— 寧可說 unknown 也不硬猜。
 
-> English documentation: [README.md](README.md) · 技術報告：[docs/report.docx](docs/report.docx)（Word 交付版）· [docs/report.md](docs/report.md)（原始碼）
+> English documentation: [README.md](README.md) Technical report: docs/report.md (source)
 
 ---
 

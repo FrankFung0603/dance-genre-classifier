@@ -6,7 +6,7 @@ Paste a YouTube URL (or a direct MP4 URL) → the video plays in the browser →
 
 **Headline result (held-out test, group split by source video):** macro-F1 **0.619 → 0.823 → 0.879** across three training rounds (v3 vs v2 on the same test set). Unknown recall **1.000** — the system says "unknown" rather than guessing.
 
-> 中文說明文件：[README.zh.md](README.zh.md) · Technical report: [docs/report.docx](docs/report.docx) (Word) · [docs/report.md](docs/report.md) (source)
+> 中文說明文件：[README.zh.md](README.zh.md) Technical report: docs/report.md 
 
 ---
 
