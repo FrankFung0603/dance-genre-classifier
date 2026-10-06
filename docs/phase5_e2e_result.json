@@ -1,0 +1,86 @@
+{
+  "target": "http://localhost:8080",
+  "passed": true,
+  "checks": {
+    "healthz_via_nginx": {
+      "ok": true,
+      "detail": "{'ok': True, 'ffmpeg': True, 'model': True, 'db': True, 'redis': True, 'active_sessions': 0}"
+    },
+    "db_connected": {
+      "ok": true,
+      "detail": "db=True"
+    },
+    "redis_connected": {
+      "ok": true,
+      "detail": "redis=True"
+    },
+    "session_created_mp4": {
+      "ok": true,
+      "detail": "kind=mp4"
+    },
+    "ws_ready_msg": {
+      "ok": true,
+      "detail": "types=['ready', 'state', 'stream_started', 'prediction', 'prediction', 'prediction']"
+    },
+    "predictions_flow_mp4": {
+      "ok": true,
+      "detail": "n=13 in 14.0s"
+    },
+    "prediction_rate_1hz": {
+      "ok": true,
+      "detail": "1.08s/pred"
+    },
+    "media_time_monotonic": {
+      "ok": true,
+      "detail": ""
+    },
+    "frame_to_prediction_lt_1s": {
+      "ok": true,
+      "detail": "mean=138ms max=479ms"
+    },
+    "nondance_stays_unknown": {
+      "ok": true,
+      "detail": "genres={'unknown', 'contemporary'}"
+    },
+    "seek_state_received": {
+      "ok": true,
+      "detail": ""
+    },
+    "seek_recovered": {
+      "ok": true,
+      "detail": "n=18"
+    },
+    "seek_position_accurate": {
+      "ok": true,
+      "detail": "first=31.0"
+    },
+    "feedback_post_roundtrip": {
+      "ok": true,
+      "detail": "up=11 down=12"
+    },
+    "feedback_invalid_genre_400": {
+      "ok": true,
+      "detail": "code=400"
+    },
+    "feedback_get_readback": {
+      "ok": true,
+      "detail": "count=2"
+    },
+    "session_created_youtube": {
+      "ok": true,
+      "detail": "kind=youtube"
+    },
+    "predictions_flow_youtube": {
+      "ok": true,
+      "detail": "n=20"
+    },
+    "cam_streaming": {
+      "ok": true,
+      "detail": "n=20/20¡]¯Ê fc_weights.npy ®ÉµL cam¡^"
+    },
+    "youtube_payload_schema": {
+      "ok": true,
+      "detail": "genres=['unknown', 'ballet', 'ballet', 'ballet', 'ballet']"
+    }
+  }
+}

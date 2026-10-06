@@ -1,0 +1,126 @@
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+{'train': 5184, 'val': 1162, 'test': 1174}
+cache ready (memmap lazy-open per worker, 零解碼訓練)
+[sanity] batch (4, 3, 16, 224, 224) | logits mean 0.105 std 0.682 | pred classes [1, 1, 1, 1] | true [0, 0, 0, 0]
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+  step   50 | loss(avg50) 1.878 | lr 7.87e-05 | 7.1 win/s | gpu 4.8GB
+  step  100 | loss(avg50) 1.454 | lr 1.56e-04 | 7.8 win/s | gpu 4.8GB
+  step  150 | loss(avg50) 1.059 | lr 2.33e-04 | 8.0 win/s | gpu 4.8GB
+  step  200 | loss(avg50) 0.813 | lr 3.10e-04 | 8.0 win/s | gpu 4.8GB
+  step  250 | loss(avg50) 0.719 | lr 3.87e-04 | 8.2 win/s | gpu 4.8GB
+  step  300 | loss(avg50) 0.660 | lr 4.65e-04 | 8.3 win/s | gpu 4.8GB
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+epoch  1 | train 1.060 | val 1.295 | val macro-F1 0.661 | lr 5.00e-04 | 690s
+  -> saved best (F1 0.661)
+  step  350 | loss(avg50) 0.624 | lr 5.00e-04 | 8.7 win/s | gpu 4.8GB
+  step  400 | loss(avg50) 0.615 | lr 5.00e-04 | 8.8 win/s | gpu 4.8GB
+  step  450 | loss(avg50) 0.587 | lr 4.99e-04 | 8.7 win/s | gpu 4.8GB
+  step  500 | loss(avg50) 0.557 | lr 4.98e-04 | 8.7 win/s | gpu 4.8GB
+  step  550 | loss(avg50) 0.567 | lr 4.97e-04 | 8.7 win/s | gpu 4.8GB
+  step  600 | loss(avg50) 0.534 | lr 4.95e-04 | 8.7 win/s | gpu 4.8GB
+Unhandled exception caught in c10/util/AbortHandler.h
+00007FFFD2A8DA4600007FFFD2A83930 torch_python.dll!torch::autograd::THPCppFunction_requires_grad [<unknown file> @ <unknown line number>]
+00007FF8D75B218700007FF8D75B2170 ucrtbase.dll!terminate [<unknown file> @ <unknown line number>]
+00007FF8CB4C1AB100007FF8CB4C1150 VCRUNTIME140_1.dll!_NLG_Return2 [<unknown file> @ <unknown line number>]
+00007FF8CB4C232F00007FF8CB4C1150 VCRUNTIME140_1.dll!_NLG_Return2 [<unknown file> @ <unknown line number>]
+00007FF8CB4C238900007FF8CB4C1150 VCRUNTIME140_1.dll!_NLG_Return2 [<unknown file> @ <unknown line number>]
+00007FF8CB4C418900007FF8CB4C40E0 VCRUNTIME140_1.dll!_CxxFrameHandler4 [<unknown file> @ <unknown line number>]
+00007FF8DA2E54FF00007FF8DA2E5460 ntdll.dll!_chkstk [<unknown file> @ <unknown line number>]
+00007FF8DA24BD2500007FF8DA24B6D0 ntdll.dll!RtlWow64GetCurrentMachine [<unknown file> @ <unknown line number>]
+00007FF8DA18F88D00007FF8DA18F700 ntdll.dll!RtlRaiseException [<unknown file> @ <unknown line number>]
+00007FF8D7A241CA00007FF8D7A24140 KERNELBASE.dll!RaiseException [<unknown file> @ <unknown line number>]
+00007FF8D69F6BA700007FF8D69F6B10 VCRUNTIME140.dll!CxxThrowException [<unknown file> @ <unknown line number>]
+00007FF89BF25D5B00007FF89BF25BE0 c10_cuda.dll!c10::cuda::c10_cuda_check_implementation [<unknown file> @ <unknown line number>]
+00007FFE69123D0000007FFE69121DD0 torch_cuda.dll!torch::cuda::CUDAPluggableAllocator::CUDAPluggableAllocator::enable [<unknown file> @ <unknown line number>]
+00007FFE69127C4E00007FFE69121DD0 torch_cuda.dll!torch::cuda::CUDAPluggableAllocator::CUDAPluggableAllocator::enable [<unknown file> @ <unknown line number>]
+00007FFE6912835500007FFE69121DD0 torch_cuda.dll!torch::cuda::CUDAPluggableAllocator::CUDAPluggableAllocator::enable [<unknown file> @ <unknown line number>]
+00007FFE69124E3900007FFE69121DD0 torch_cuda.dll!torch::cuda::CUDAPluggableAllocator::CUDAPluggableAllocator::enable [<unknown file> @ <unknown line number>]
+00007FF87C7AB5CD00007FF87C7AB550 c10.dll!c10::StorageImpl::~StorageImpl [<unknown file> @ <unknown line number>]
+00007FF87C7ABC1700007FF87C7AB9B0 c10.dll!c10::VariableVersion::operator= [<unknown file> @ <unknown line number>]
+00007FF87C7CD5E600007FF87C7CD570 c10.dll!c10::TensorImpl::~TensorImpl [<unknown file> @ <unknown line number>]
+00007FFE9E5D412500007FFE9E5D2B20 torch_cpu.dll!at::DynamicLibrary::sym [<unknown file> @ <unknown line number>]
+00007FFE9E56A55800007FFE9E56A510 torch_cpu.dll!at::Tensor::operator= [<unknown file> @ <unknown line number>]
+00007FFFD2B4B5D900007FFFD2B20310 torch_python.dll!torch::autograd::registerFunctionPreHook [<unknown file> @ <unknown line number>]
+00007FF8053953F600007FF805394DA8 python312.dll!PyErr_SetString [<unknown file> @ <unknown line number>]
+00007FF80539A39600007FF805395B08 python312.dll!PyDict_Clear [<unknown file> @ <unknown line number>]
+00007FF80539A64500007FF805395B08 python312.dll!PyDict_Clear [<unknown file> @ <unknown line number>]
+00007FF8053F16F400007FF8053EB150 python312.dll!Py_strhex [<unknown file> @ <unknown line number>]
+00007FF805345AEC00007FF80533FD90 python312.dll!PyEval_EvalFrameDefault [<unknown file> @ <unknown line number>]
+00007FF805375C4E00007FF805375B40 python312.dll!PyType_CalculateMetaclass [<unknown file> @ <unknown line number>]
+00007FF80537648500007FF8053763D8 python312.dll!PyEval_EvalCode [<unknown file> @ <unknown line number>]
+00007FF8053772D400007FF8053770E4 python312.dll!PyUnicode_FromStringAndSize [<unknown file> @ <unknown line number>]
+00007FF80537845C00007FF805377F74 python312.dll!PyObject_CallMethodObjArgs [<unknown file> @ <unknown line number>]
+00007FF80534A9BC00007FF80534A8B4 python312.dll!PyImport_FixupExtensionObject [<unknown file> @ <unknown line number>]
+00007FF80534A74600007FF80534A620 python312.dll!PyRun_SimpleFileObject [<unknown file> @ <unknown line number>]
+00007FF805349DA000007FF805349D4C python312.dll!PyRun_AnyFileObject [<unknown file> @ <unknown line number>]
+00007FF805349BDE00007FF8053494A8 python312.dll!PyTraceBack_Print [<unknown file> @ <unknown line number>]
+00007FF805349ABB00007FF8053494A8 python312.dll!PyTraceBack_Print [<unknown file> @ <unknown line number>]
+00007FF805412B1300007FF8054128A0 python312.dll!PyInterpreterState_SetRunningMain [<unknown file> @ <unknown line number>]
+00007FF80541268D00007FF805412678 python312.dll!Py_RunMain [<unknown file> @ <unknown line number>]
+00007FF8054111E100007FF8054111BC python312.dll!Py_Main [<unknown file> @ <unknown line number>]
+00007FF7179C1230 <unknown symbol address> python.exe!<unknown symbol> [<unknown file> @ <unknown line number>]
+00007FF8D9B6CD8700007FF8D9B6CD70 KERNEL32.DLL!BaseThreadInitThunk [<unknown file> @ <unknown line number>]
+00007FF8DA22CAEC00007FF8DA22CAC0 ntdll.dll!RtlUserThreadStart [<unknown file> @ <unknown line number>]
+
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+{'train': 5184, 'val': 1162, 'test': 1174}
+cache ready (memmap lazy-open per worker, 零解碼訓練)
+[sanity] batch (4, 3, 16, 224, 224) | logits mean 0.105 std 0.682 | pred classes [1, 1, 1, 1] | true [0, 0, 0, 0]
+[resume] from epoch 3, step 600, best_f1 0.661
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+  step  650 | loss(avg50) 0.570 | lr 4.94e-04 | 7.6 win/s | gpu 5.1GB
+  step  700 | loss(avg50) 0.523 | lr 4.92e-04 | 8.2 win/s | gpu 5.1GB
+  step  750 | loss(avg50) 0.528 | lr 4.89e-04 | 8.4 win/s | gpu 5.1GB
+  step  800 | loss(avg50) 0.510 | lr 4.87e-04 | 8.5 win/s | gpu 5.1GB
+  step  850 | loss(avg50) 0.526 | lr 4.84e-04 | 8.5 win/s | gpu 5.1GB
+  step  900 | loss(avg50) 0.499 | lr 4.80e-04 | 8.6 win/s | gpu 5.1GB
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+C:\Users\asus\Desktop\project\training\train.py:85: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(frames).permute(3, 0, 1, 2).contiguous()  # C,T,H,W uint8
+epoch  3 | train 0.523 | val 1.132 | val macro-F1 0.705 | lr 4.79e-04 | 683s
+  -> saved best (F1 0.705)
+  step  950 | loss(avg50) 0.496 | lr 4.77e-04 | 8.6 win/s | gpu 5.1GB
+  step 1000 | loss(avg50) 0.484 | lr 4.73e-04 | 8.7 win/s | gpu 5.1GB
+  step 1050 | loss(avg50) 0.490 | lr 4.69e-04 | 8.7 win/s | gpu 5.1GB
+  step 1100 | loss(avg50) 0.473 | lr 4.65e-04 | 8.7 win/s | gpu 5.1GB
+  step 1150 | loss(avg50) 0.472 | lr 4.60e-04 | 8.7 win/s | gpu 5.1GB
+  step 1200 | loss(avg50) 0.465 | lr 4.55e-04 | 8.7 win/s | gpu 5.1GB
+epoch  4 | train 0.481 | val 1.177 | val macro-F1 0.654 | lr 4.51e-04 | 638s
+  step 1250 | loss(avg50) 0.518 | lr 4.50e-04 | 7.7 win/s | gpu 5.1GB
+  step 1300 | loss(avg50) 0.518 | lr 4.45e-04 | 8.8 win/s | gpu 5.1GB
+  step 1350 | loss(avg50) 0.522 | lr 4.39e-04 | 8.9 win/s | gpu 5.1GB
+  step 1400 | loss(avg50) 0.506 | lr 4.34e-04 | 8.9 win/s | gpu 5.1GB
+  step 1450 | loss(avg50) 0.494 | lr 4.28e-04 | 8.8 win/s | gpu 5.1GB
+  step 1500 | loss(avg50) 0.485 | lr 4.22e-04 | 8.8 win/s | gpu 5.1GB
+  step 1550 | loss(avg50) 0.476 | lr 4.15e-04 | 8.8 win/s | gpu 5.1GB
+epoch  5 | train 0.500 | val 1.248 | val macro-F1 0.620 | lr 4.12e-04 | 631s
+  step 1600 | loss(avg50) 0.483 | lr 4.09e-04 | 8.8 win/s | gpu 5.1GB
+  step 1650 | loss(avg50) 0.484 | lr 4.02e-04 | 8.7 win/s | gpu 5.1GB
+  step 1700 | loss(avg50) 0.482 | lr 3.95e-04 | 8.8 win/s | gpu 5.1GB
+  step 1750 | loss(avg50) 0.476 | lr 3.88e-04 | 8.8 win/s | gpu 5.1GB
+  step 1800 | loss(avg50) 0.478 | lr 3.80e-04 | 8.8 win/s | gpu 5.1GB
+  step 1850 | loss(avg50) 0.489 | lr 3.73e-04 | 8.8 win/s | gpu 5.1GB
+epoch  6 | train 0.481 | val 1.199 | val macro-F1 0.658 | lr 3.66e-04 | 628s
+  step 1900 | loss(avg50) 0.470 | lr 3.65e-04 | 8.3 win/s | gpu 5.1GB
+  step 1950 | loss(avg50) 0.475 | lr 3.58e-04 | 8.9 win/s | gpu 5.1GB
+  step 2000 | loss(avg50) 0.466 | lr 3.50e-04 | 8.9 win/s | gpu 5.1GB
+  step 2050 | loss(avg50) 0.470 | lr 3.42e-04 | 8.9 win/s | gpu 5.1GB
+  step 2100 | loss(avg50) 0.470 | lr 3.34e-04 | 8.9 win/s | gpu 5.1GB
+  step 2150 | loss(avg50) 0.467 | lr 3.25e-04 | 8.9 win/s | gpu 5.1GB
+  step 2200 | loss(avg50) 0.468 | lr 3.17e-04 | 8.9 win/s | gpu 5.1GB
+epoch  7 | train 0.470 | val 1.128 | val macro-F1 0.654 | lr 3.14e-04 | 623s
+early stop @ epoch 7 (best 0.705)
+
+best val macro-F1: 0.7045 -> dance_finetuned.pt

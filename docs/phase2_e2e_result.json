@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "checks": {
+    "session_created": {
+      "ok": true,
+      "detail": ""
+    },
+    "ready_and_stream_started": {
+      "ok": true,
+      "detail": "states=['ready', 'stream_started']"
+    },
+    "predictions_flow": {
+      "ok": true,
+      "detail": "n=18 in 12.0s"
+    },
+    "prediction_rate_1hz": {
+      "ok": true,
+      "detail": "0.67s/pred"
+    },
+    "media_time_monotonic": {
+      "ok": true,
+      "detail": "[1.0, 2.0, 3.0, 4.0]..."
+    },
+    "payload_schema": {
+      "ok": true,
+      "detail": "genres=['unknown', 'ballet', 'ballet', 'ballet', 'ballet']"
+    },
+    "cam_grid_valid": {
+      "ok": true,
+      "detail": "n=18/18 size=[14, 14]"
+    },
+    "frame_to_prediction_lt_1s": {
+      "ok": true,
+      "detail": "mean=118ms max=265ms n=18"
+    },
+    "seek_state_received": {
+      "ok": true,
+      "detail": "types=['prediction', 'state', 'prediction', 'prediction', 'prediction', 'prediction', 'prediction', 'prediction', 'prediction', 'prediction']"
+    },
+    "seek_recovered": {
+      "ok": true,
+      "detail": "n=18"
+    },
+    "seek_position_accurate": {
+      "ok": true,
+      "detail": "first post-seek pred media_time=31.0"
+    },
+    "pause_stops_predictions": {
+      "ok": true,
+      "detail": "msgs=['state']"
+    },
+    "pause_state_msg": {
+      "ok": true,
+      "detail": ""
+    },
+    "resume_restarts_stream": {
+      "ok": true,
+      "detail": "types=['state', 'prediction']"
+    },
+    "session_cleaned_on_disconnect": {
+      "ok": true,
+      "detail": "active_sessions=0"
+    }
+  }
+}

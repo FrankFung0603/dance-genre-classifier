@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07080f;
+  --foreground: #ececf1;
+  --panel: #0d0f1a;
+  --line: rgba(255, 255, 255, 0.08);
+  --muted: #9b9ba6;   /* 次要文字：對 --panel ≥ 4.5:1 */
+  --faint: #6d6d7a;   /* 僅用於 ≥14px 的裝飾性文字 */
+  --accent: #38bdf8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+}
+
+/* --- 深色主題捲軸（browser surface 屬於設計的一部分） --- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #262a3a;
+  border-radius: 5px;
+  border: 2px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #343a52;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* --- 鍵盤焦點環（一致、可見） --- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   深空控制台設計系統
+   面板 = 固實抬升面（一次深度語言：1px 邊 or 陰影，不疊加）
+   光暈只允許出現在「編碼資料」處（播放器=當前舞種色）
+   ============================================================ */
+
+/* --- 背景：單一極光，極低調（世界氛圍，不搶內容） --- */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  width: 720px;
+  height: 720px;
+  top: -320px;
+  right: -220px;
+  border-radius: 9999px;
+  filter: blur(140px);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(56, 136, 248, 0.13), transparent 70%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  width: 560px;
+  height: 560px;
+  bottom: -260px;
+  left: -180px;
+  border-radius: 9999px;
+  filter: blur(140px);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(124, 92, 248, 0.1), transparent 70%);
+}
+
+/* --- 面板：固實抬升面 --- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+/* --- live 狀態呼吸點（語義：正在推流） --- */
+.live-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #34d399;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(52, 211, 153, 0.7);
+  animation: live-ring 1.8s ease-out infinite;
+}
+@keyframes live-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* --- equalizer 小音柱（語義：正在推理中的音訊/畫面流） --- */
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.eq span {
+  width: 3px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: eq-bounce 1s ease-in-out infinite;
+}
+.eq span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.eq span:nth-child(3) {
+  animation-delay: 0.36s;
+}
+@keyframes eq-bounce {
+  0%,
+  100% {
+    height: 30%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+/* --- 掃描線（語義：分析中——視訊面上方低調掠過） --- */
+.scanline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -20%;
+  height: 18%;
+  z-index: 20;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(160, 200, 255, 0.045), transparent);
+  animation: scan 7s linear infinite;
+}
+@keyframes scan {
+  0% {
+    top: -20%;
+  }
+  55%,
+  100% {
+    top: 110%;
+  }
+}

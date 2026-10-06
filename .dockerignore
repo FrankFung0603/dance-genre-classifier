@@ -1,0 +1,5 @@
+# 後端 build context = 專案根目錄（COPY server/），其餘全排除
+**
+!server/
+server/__pycache__
+server/**/__pycache__

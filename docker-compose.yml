@@ -1,0 +1,96 @@
+# Dance Genre Classifier — 一鍵部署
+# 入口：http://localhost:8080（nginx 統一反代 frontend + backend + WS）
+#
+# 服務：
+#   nginx     統一入口（WS upgrade、same-origin 反代）
+#   frontend  Next.js（NEXT_PUBLIC_API_BASE="" → 全走 nginx 相對路徑）
+#   backend   FastAPI + in-proc inference worker（ffmpeg pipe + ONNX + MediaPipe）
+#             —— worker 直接持有 ffmpeg 進程，raw 幀不過 Redis（架構硬規則）；
+#                單進程 demo 模型，控制訊息 in-proc queue（契約同 Redis 匯流排，
+#                拆進程時替換，見 docs/decisions.md #1/#16）
+#   redis     控制訊息匯流排（healthz 回報連通狀態；多進程拆分時啟用 pub/sub）
+#   postgres  反饋入庫（👍/👎）
+#
+# GPU：backend 加 gpus: all → ONNX Runtime 走 CUDA EP；
+#      無 GPU 主機：刪掉 backend 的 gpus 區塊即為 CPU fallback 模式（同一份 image）。
+name: dance
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE: ""   # same-origin：API/WS 走 nginx 相對路徑
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://dance:dance@postgres:5432/dance_feedback
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./models:/app/models:ro   # 模型/pose task 不進 image，換模型免重建
+    gpus: all                      # 無 GPU 主機刪除此行 → CPU fallback
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s            # lifespan prewarm（ORT session + mediapipe）需數秒
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dance
+      POSTGRES_PASSWORD: dance
+      POSTGRES_DB: dance_feedback
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dance -d dance_feedback"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  pgdata:

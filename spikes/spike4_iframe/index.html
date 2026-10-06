@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<title>Spike 4 — YouTube IFrame 250ms 回報</title>
+<style>
+  body { font-family: Consolas, monospace; background: #111; color: #ddd; padding: 16px; }
+  #player { width: 640px; height: 360px; }
+  #readout { margin-top: 12px; padding: 10px; background: #1b1b1b; border: 1px solid #333;
+             white-space: pre-wrap; font-size: 13px; }
+  .ok { color: #7c7; }
+  .warn { color: #fc6; }
+</style>
+</head>
+<body>
+  <h3>Spike 4: IFrame API — 每 250ms 取得 currentTime / state</h3>
+  <p>狀態變化時立即回報 + 250ms 心跳。console 與下方 readout 同步顯示（模擬 WS payload）。</p>
+  <div id="player"></div>
+  <div id="status" class="warn">等待 YouTube IFrame API ...</div>
+  <div id="readout">尚無資料</div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let player = null;
+    let lastState = null;
+    const REPORT_MS = 250;
+    const STATES = ["unstarted", "ended", "playing", "paused", "buffering", "cued"];
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player("player", {
+        width: 640,
+        height: 360,
+        videoId: "9bZkp7q19f0",
+        playerVars: { playsinline: 1 },
+        events: {
+          onReady: (e) => {
+            document.getElementById("status").textContent = "API ready，播放中";
+            document.getElementById("status").className = "ok";
+            e.target.playVideo();
+          },
+          onStateChange: (e) => {
+            const s = STATES[e.data] ?? e.data;
+            if (s !== lastState) {
+              lastState = s;
+              report(`state-change (${new Date().toLocaleTimeString()})`);
+            }
+          },
+        },
+      });
+    }
+
+    function report(tag) {
+      if (!player || typeof player.getCurrentTime !== "function") return;
+      const payload = {
+        event: tag,
+        media_time: Number(player.getCurrentTime().toFixed(3)),
+        duration: Number(player.getDuration().toFixed(1)),
+        state: lastState,
+      };
+      // spike 階段：印到 console + 頁面。正式版改為 WebSocket.send(payload)
+      console.log("REPORT", JSON.stringify(payload));
+      document.getElementById("readout").textContent = JSON.stringify(payload, null, 2);
+    }
+
+    setInterval(() => report("heartbeat"), REPORT_MS);
+  </script>
+</body>
+</html>

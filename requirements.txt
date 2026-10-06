@@ -1,0 +1,19 @@
+# Spike 階段依賴（Windows 本機開發用）
+# torch/torchvision 請用 CPU wheel：pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# 部署（Docker/Linux GPU）時改用 onnxruntime-gpu + CUDA EP，不用 onnxruntime-directml
+numpy==2.5.3
+onnx==1.23.1
+onnxruntime-directml==1.24.4
+onnxscript==0.7.2
+torch==2.14.0+cpu
+torchvision==0.29.0+cpu
+yt-dlp==2026.8.19
+
+# Phase 2 串流後端
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+
+# Phase 4 反饋入庫
+sqlalchemy==2.0.44
+psycopg2-binary==2.9.11
+

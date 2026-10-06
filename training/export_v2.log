@@ -1,0 +1,114 @@
+W1002 00:19:11.443000 340056 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\asus\AppData\Local\Programs\Python\Python312\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -3.451906260831805e-10 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 8.428593645248839e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 3.8119878809084184e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -6.941407804106348e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -5.235613542708961e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 7.541963498169935e-09 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -4.662366848151578e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 6.152053089181209e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 5.881873121893477e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -1.6639871702750497e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 1.4695498151695574e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -2.315156777399352e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 6.933498042371866e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -3.2079636724802185e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 7.996579398650283e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -7.07548863942975e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -4.927338093096978e-09 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 1.288980122637895e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -2.7178630457314057e-09 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 5.2339334644102564e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -1.2559928097566342e-10 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 5.488378640450264e-09 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -1.2532768600692634e-08 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 6.271855568229512e-08 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 2.1558983487324213e-09 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -9.836386150041676e-10 will be truncated to -1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 2.7517639278329398e-09 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:52: UserWarning: the float32 number 1.1829863755252745e-09 will be truncated to 1e-07
+  warnings.warn(
+C:\Users\asus\Desktop\project\.venv\Lib\site-packages\onnxconverter_common\float16.py:70: UserWarning: the float32 number -2.756913808354966e-09 will be truncated to -1e-07
+  warnings.warn(
+[torch.onnx] Obtain model graph for `VideoResNet([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `VideoResNet([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+FP32 ONNX: 125.3 MB (single file)
+FP16 ONNX: 62.8 MB
+parity: top1 agreement 32/32 | max prob diff mean 0.0011
+  eval 50/1174
+  eval 100/1174
+  eval 150/1174
+  eval 200/1174
+  eval 250/1174
+  eval 300/1174
+  eval 350/1174
+  eval 400/1174
+  eval 450/1174
+  eval 500/1174
+  eval 550/1174
+  eval 600/1174
+  eval 650/1174
+  eval 700/1174
+  eval 750/1174
+  eval 800/1174
+  eval 850/1174
+  eval 900/1174
+  eval 950/1174
+  eval 1000/1174
+  eval 1050/1174
+  eval 1100/1174
+  eval 1150/1174
+
+=== TEST (FP16 ORT, n=1174) ===
+              precision    recall  f1-score   support
+
+      ballet      0.915     0.808     0.858       240
+  breakdance      0.867     0.988     0.923       171
+contemporary      0.575     0.560     0.567       218
+      hiphop      0.932     0.680     0.786       181
+       salsa      0.992     0.996     0.994       240
+     unknown      0.681     1.000     0.810       124
+
+    accuracy                          0.827      1174
+   macro avg      0.827     0.839     0.823      1174
+weighted avg      0.839     0.827     0.825      1174
+
+macro F1 = 0.8233
+-> docs/phase1_metrics.json, docs/phase1_confusion_matrix.png
+
+latency FP16 (DML): 84.2 ms/clip | FP32: 85.8 ms/clip

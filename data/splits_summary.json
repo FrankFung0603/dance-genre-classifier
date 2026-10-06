@@ -1,0 +1,43 @@
+{
+  "train": {
+    "total": 6092,
+    "per_genre": {
+      "ballet": 997,
+      "breakdance": 963,
+      "contemporary": 729,
+      "hiphop": 1033,
+      "salsa": 1305,
+      "unknown": 1065
+    }
+  },
+  "val": {
+    "total": 1400,
+    "per_genre": {
+      "ballet": 214,
+      "breakdance": 193,
+      "contemporary": 219,
+      "hiphop": 238,
+      "salsa": 296,
+      "unknown": 240
+    }
+  },
+  "test": {
+    "total": 1414,
+    "per_genre": {
+      "ballet": 240,
+      "breakdance": 171,
+      "contemporary": 278,
+      "hiphop": 241,
+      "salsa": 300,
+      "unknown": 184
+    },
+    "source_videos_per_genre": {
+      "ballet": 4,
+      "breakdance": 4,
+      "contemporary": 5,
+      "hiphop": 5,
+      "salsa": 5,
+      "unknown": 4
+    }
+  }
+}

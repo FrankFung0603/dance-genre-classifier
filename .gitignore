@@ -1,0 +1,22 @@
+# ---- Python ----
+.venv/
+__pycache__/
+*.pyc
+
+# ---- Node / Next.js ----
+frontend/node_modules/
+frontend/.next/
+
+# ---- 大型二進位產物（不進 git：GitHub 單檔上限 100MB；模型可用 training/ 腳本重生成）----
+data/raw/
+data/*.npy
+models/*.onnx
+models/*.pt
+models/*.task
+
+# ---- OS / 雜物 ----
+.DS_Store
+Thumbs.db
+
+# ---- ffmpeg 二進位（GitHub 單檔上限 100MB；Windows dev 請自行下載 essentials build 放 tools/）----
+tools/ffmpeg*/
