@@ -1,5 +1,15 @@
 # 決策記錄（假設與偏差，按時間追加）
 
+## 2026-10-09 CPU 模式與預測顯示語義
+
+22. **修「暫停後永久斷預測」三連 bug：前端 resume 偵測改用 pauseOutstanding 旗標（涵蓋 2→3→1）、main.py 轉發 resume 的 media_time、worker resume target 對 media_time=0/None 的處理**。
+    Why: 暫停久了之後按播放，影片 buffer 已被逐出，YouTube IFrame 走 `2→3（buffering）→1`，前端只認 `2→1` 送 resume → resume 永遠不發 → worker 卡在 playing=False，從此沒有預測（短暫停 buffer 還在，直接 2→1，所以「暫停久了才會」——用戶實測歸納的相關性完全正確）。另兩個同族問題：main.py 轉發 resume 時丟掉 media_time → 暫停中拖進度條後恢復會重啟到舊暫停點（預測流永久落後）；worker `msg.get("media_time") or paused_at` 把合法的片頭 0 當 falsy。WS 協議重現驗證（pause → 20s 心跳 → resume）：帶 media_time 3.6s 恢復、不帶退化 paused_at 3.3s 恢復，暫停期間零預測（正確）。
+
+20. **延遲預測照樣顯示：前端 fallback 容差 2.5s → 6s、Dashboard 從「藏舞種顯示追趕中」改為「顯示舞種 + 延遲 +Xs 標籤」**。
+    Why: CPU 模式（`DANCE_ORT_PROVIDER=cpu`）推理 ~0.6s/窗、解碼流常態落後播放頭 3–5s（GPU 模式流保持領先、[lag] 平時不觸發），2.5s 容差把幾乎所有到達的預測判成過期 → 儀表板長時間空白（用戶實測「有時候連預測也不彈出來」）。用戶決策：延遲沒關係，起碼要顯示最新已知預測；誠實性由「延遲 +Xs」標籤保留。#13 的原意（追趕期不標註地顯示「別的時間點的答案」）在 GPU 情境不受影響（預測提前抵達，lag ≤ 0）。
+21. **`DANCE_ORT_PROVIDER=cpu` 環境變數強制 CPU 推理（worker 自動偵測 CUDA > DML > CPU 保留為預設）**。
+    Why: 面試方要求以 CPU 模式實測影片；明確開關優於「刪 compose gpus 區塊」（後者管不住本機 dev 的 DML 自動選中），且可秒級切回（刪一行 env）。同輪 benchmark：v3 權重 CPU EP vs DML，macro F1 0.880 vs 0.879、487 vs 100 ms/clip（docs/phase-1.md）；compose CPU 實測 1.16 Hz、635 ms/clip、首預測 +4.6s。
+
 ## 2026-10-06（晚）即時 CAM 歸因取代 Pose overlay
 
 19. **移除 MediaPipe Pose overlay（含依賴），可解釋性改由即時 CAM 歸因正面滿足**。

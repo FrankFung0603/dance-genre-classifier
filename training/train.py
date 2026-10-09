@@ -6,7 +6,7 @@
 - 輸出：models/dance_finetuned.pt（state_dict + classes + val_f1）、training/log.csv
 
 Usage:
-    python train.py [--epochs 15] [--batch 16] [--seed 42]
+    python train.py [--epochs 15] [--batch 16] [--seed 42] [--device cuda|cpu]
 """
 import argparse
 import csv
@@ -111,7 +111,7 @@ def evaluate(model, loader, device) -> tuple[float, float, np.ndarray]:
         x = x.to(device, non_blocking=True).float().div_(255.0)
         x = (x - MEAN.to(device)) / STD.to(device)
         y = y.to(device)
-        with torch.autocast("cuda"):
+        with torch.autocast(device_type=device, enabled=(device == "cuda")):
             out = model(x)
             losses.append(ce(out, y).item())
         ps.append(out.argmax(1).cpu().numpy())
@@ -127,6 +127,8 @@ def main() -> None:
     ap.add_argument("--accum", type=int, default=4, help="gradient accumulation（等效 batch = batch × accum）")
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--device", default="cuda", choices=["cuda", "cpu"],
+                    help="cpu = 無 GPU 訓練（FP32、無 AMP、無 TF32）；與 cuda run 同配方對比訓練成本用")
     ap.add_argument("--resume", action="store_true", help="從 models/ckpt_latest.pt 續訓（斷點恢復，連 optimizer/排程）")
     ap.add_argument("--init-from", default=None,
                     help="續訓：只載入指定 checkpoint 的權重（如 models/dance_finetuned.pt），重置 optimizer/排程；"
@@ -183,7 +185,7 @@ def main() -> None:
     else:
         print("WARN: no window cache — falling back to live ffmpeg decode (slow)")
 
-    device = "cuda"
+    device = args.device
     model = build_model().to(device)
 
     # 類別平衡取樣
@@ -194,7 +196,7 @@ def main() -> None:
     def make_loader(batch: int, shuffle: bool, ds_train: bool, sampler_=None):
         return DataLoader(
             DanceWindowDataset(rows["train" if ds_train else "val"], train=ds_train, cache=cache),
-            batch_size=batch, num_workers=args.workers, pin_memory=True,
+            batch_size=batch, num_workers=args.workers, pin_memory=(device == "cuda"),
             sampler=sampler_, shuffle=shuffle and sampler_ is None,
             persistent_workers=True, prefetch_factor=4, timeout=60,
         )
@@ -226,7 +228,7 @@ def main() -> None:
     san_x, san_y = next(iter(DataLoader(DanceWindowDataset(rows["train"], train=False, cache=cache),
                                         batch_size=args.batch, num_workers=0)))
     model.eval()
-    with torch.no_grad(), torch.autocast("cuda"):
+    with torch.no_grad(), torch.autocast(device_type=device, enabled=(device == "cuda")):
         san_out = model(san_x.to(device).float().div_(255.0))
     print(f"[sanity] batch {tuple(san_x.shape)} | logits mean {san_out.float().mean():.3f} "
           f"std {san_out.float().std():.3f} | pred classes {san_out.float().argmax(1).tolist()} | true {san_y.tolist()}",
@@ -245,7 +247,7 @@ def main() -> None:
         return 0.5 * (1 + np.cos(np.pi * p))
 
     sched = torch.optim.lr_scheduler.LambdaLR(opt, lr_lambda)
-    scaler = torch.amp.GradScaler()
+    scaler = torch.amp.GradScaler(enabled=(device == "cuda"))
     ce = nn.CrossEntropyLoss(label_smoothing=0.1)
 
     # ---------- resume ----------
@@ -304,10 +306,10 @@ def main() -> None:
                 sched.step()
                 step += 1
                 if step % 50 == 0:
-                    mem = torch.cuda.max_memory_allocated() / 1e9
+                    mem = f"gpu {torch.cuda.max_memory_allocated() / 1e9:.1f}GB" if device == "cuda" else "cpu"
                     rate = win_seen / max(1e-9, time.time() - t0)
                     print(f"  step {step:4d} | loss(avg50) {np.mean(losses[-50 * accum:]):.3f} "
-                          f"| lr {opt.param_groups[1]['lr']:.2e} | {rate:.1f} win/s | gpu {mem:.1f}GB",
+                          f"| lr {opt.param_groups[1]['lr']:.2e} | {rate:.1f} win/s | {mem}",
                           flush=True)
                 if step % 200 == 0:
                     save_latest(epoch)

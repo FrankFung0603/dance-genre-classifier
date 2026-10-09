@@ -28,9 +28,11 @@ export default function Dashboard({ pred, history, latencyMs, starting, syncing,
   const conf = pred?.confidence ?? 0;
   const color = pred ? GENRE_COLORS[pred.genre] : "#52525b";
   const lag = lagS ?? 0;
-  // >2.5s 的預測是「別的時間點的答案」，顯示出來反而誤導 → 誠實顯示追趕狀態
-  const showStale = (!pred && history.length > 0) || (!!pred && lag > 2.5);
-  const staleChip = !!pred && !showStale && lag > 1.5;
+  // 延遲的預測照樣顯示（2026-10-09 用戶決策：CPU 模式下「起碼要預測」），但誠實標註
+  // 延遲秒數；buffer 內完全沒預測才顯示追趕狀態。GPU 模式預測通常提前抵達，行為不變。
+  const showStale = !pred && history.length > 0;
+  const delayed = !!pred && lag > 2.5;
+  const staleChip = !!pred && !delayed && lag > 1.5;
   return (
     <div className="panel space-y-5 rounded-2xl p-5">
       <div>
@@ -62,6 +64,11 @@ export default function Dashboard({ pred, history, latencyMs, starting, syncing,
           )}
           {!starting && syncing && (
             <span className="animate-pulse text-xs text-amber-400">seek 重新同步中…</span>
+          )}
+          {!starting && !syncing && delayed && (
+            <span className="rounded-full bg-amber-400/10 px-2 py-0.5 text-[10px] text-amber-300">
+              延遲 +{lag.toFixed(1)}s
+            </span>
           )}
           {!starting && !syncing && staleChip && (
             <span className="rounded-full bg-amber-400/10 px-2 py-0.5 text-[10px] text-amber-300">

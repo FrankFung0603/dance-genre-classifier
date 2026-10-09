@@ -133,3 +133,20 @@ Phase 2/3 完成後，針對「5 類分辨是硬性要求」做的資料擴充 +
 - ballet −4.3 是放寬閾值的預期代價（部分 ballet 窗讓給 contemporary），淨收益為正
 - 延遲不變：FP16 DML 100ms/clip、parity 32/32
 - **v3 已部署**；v2 完整備份：`models/*_v2.{pt,onnx}`；v2 同集評測 log：`training/export_v2_sametest_final.log`
+
+## CPU 推理對比（2026-10-09，同模型同測試集，僅換 execution provider）
+
+**動機**：面試跟進要求提供 CPU result。同一 v3 部署權重（`dance_r2plus1d_fp16_v3.onnx`，權重=線上部署檔）、同一 test set（n=1,414）、同一前處理路徑（與 `export_eval.py` 逐字共用 decode/preprocess），唯一變數 = DML EP → CPUExecutionProvider。
+**工具**：`spikes/eval_cpu_inference.py`；完整 log `spikes/eval_cpu_inference_v3.log`；指標 JSON `docs/cpu_inference_metrics.json`
+
+| | GPU（DML FP16，官方 v3） | CPU（CPU EP，同檔 FP16） |
+|---|---|---|
+| macro F1 | 0.8793 | **0.8799** |
+| accuracy | 0.874 | 0.875 |
+| 延遲（bench mean，隨機輸入） | 100.0 ms/clip | **486.8 ms/clip（~4.9×）** |
+| 測試集逐窗推理 mean | — | 513.2 ms/clip |
+
+- per-class F1 幾乎逐項相同（最大差異 ballet 0.810→0.813）→ **精度對硬體不敏感，0.879 在 CPU 上原樣保留**（FP16 在 CPU EP 只影響亂序浮點誤差級差異）
+- 對照 Phase 5：容器內 CPU fallback 611 ms/clip > 本機 487 ms（容器執行緒限制），量級一致
+- 結論：1 Hz 更新預算下 CPU 單窗 ~0.5–0.6s 仍可負擔；compose E2E 已驗證 CPU fallback 全流程可跑（無 GPU 機器可部署，只是延遲預算變緊）
+- train.py 順帶支援 `--device cpu`（FP32、無 AMP；預設 cuda 行為不變）；CPU 訓練對比實驗暫緩——GPU 側基準已有：7.7 win/s、376 s/epoch、8 epochs 共 ~50 分鐘

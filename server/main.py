@@ -234,7 +234,12 @@ async def ws_endpoint(ws: WebSocket, sid: str) -> None:
             elif mtype == "pause":
                 worker.control({"type": "pause"})
             elif mtype == "resume":
-                worker.control({"type": "resume"})
+                # media_time 必須轉發：暫停中拖進度條後恢復，target=當前播放頭；
+                # 丟掉的話 worker 退回 paused_at（舊暫停點）→ 預測流永遠落後
+                ctl: dict = {"type": "resume"}
+                if msg.get("media_time") is not None:
+                    ctl["media_time"] = float(msg["media_time"])
+                worker.control(ctl)
             elif mtype == "seek":
                 pending_seek["value"] = float(msg["media_time"])
                 pending_seek["seq"] += 1

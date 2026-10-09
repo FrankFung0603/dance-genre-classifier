@@ -10,6 +10,7 @@
 media_time 對齊：media_time(frame i) = offset + i / 8（offset 是本次串流的媒體起點）
 """
 import collections
+import os
 import queue as queue_mod
 import threading
 import time
@@ -65,9 +66,12 @@ def _cam_grid(feats: np.ndarray, w: np.ndarray) -> list[float]:
 def _providers() -> list[str]:
     """GPU EP 偏好序：CUDA（Linux 容器）> DML（Windows 主機）> CPU（永遠在場）。
 
+    DANCE_ORT_PROVIDER=cpu 可強制 CPU 推理（實測 ~0.5–0.6s/clip，1Hz 預算內）；
     容器跑在無 GPU 環境時 CUDA EP 不在 available list / 初始化失敗 → ORT
     自動落到 CPUExecutionProvider（CPU fallback 模式，CLAUDE.md Phase 5 要求）。
     """
+    if os.environ.get("DANCE_ORT_PROVIDER", "").strip().lower() == "cpu":
+        return ["CPUExecutionProvider"]
     avail = set(ort.get_available_providers())
     gpu = [p for p in ("CUDAExecutionProvider", "DmlExecutionProvider") if p in avail]
     return gpu + ["CPUExecutionProvider"]
@@ -89,6 +93,7 @@ def get_session(model_path: str) -> ort.InferenceSession:
                     model_path, sess_options=so,
                     providers=["CPUExecutionProvider"],
                 )
+            print(f"[ort] model={Path(model_path).name} providers={sess.get_providers()}", flush=True)
             _ORT_SESSIONS[model_path] = sess
         return sess
 
@@ -154,7 +159,9 @@ class InferenceWorker(threading.Thread):
         elif t == "pause":
             self._pause()
         elif t in ("resume", "seek"):
-            target = float(msg.get("media_time") or self.paused_at or 0.0)
+            # media_time=0 是合法位置（片頭）——只對 None 退化到 paused_at
+            mt = msg.get("media_time")
+            target = float(mt) if mt is not None else float(self.paused_at or 0.0)
             self._restart(target, reason=t)
         elif t == "playhead":
             self.client_playhead = float(msg["media_time"])

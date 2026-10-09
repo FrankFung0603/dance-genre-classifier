@@ -131,9 +131,10 @@ export function useDanceSession() {
     ws.send(JSON.stringify(msg));
   }, []);
 
-  /** 播放頭所在時間的預測（[t_start, t_end) 命中；否則退最近中心 ±2.5s）。
-   *  fallback 從 0.7s 放寬到 2.5s：seek 後解碼流要追趕播放頭，慢網路下會落後
-   *  1–2.5s，與其讓儀表板空白，顯示最新已知預測（Dashboard 會標「追趕中」）。 */
+  /** 播放頭所在時間的預測（[t_start, t_end) 命中；否則退最近中心 ±6s）。
+   *  fallback 0.7 → 2.5（seek 追趕）→ 6.0（2026-10-09）：CPU 模式推理 ~0.6s/窗、
+   *  解碼流常態落後播放頭 3–5s，2.5s 容差會把幾乎所有預測判成過期 → 儀表板長時間
+   *  空白。用戶決策：延遲沒關係，起碼要顯示最新已知預測（Dashboard 標「延遲 +Xs」）。 */
   const getPredictionAt = useCallback((t: number): PredictionMsg | null => {
     const buf = predBuf.current;
     for (let i = buf.length - 1; i >= 0; i--) {
@@ -141,7 +142,7 @@ export function useDanceSession() {
       if (t >= p.t_start && t < p.t_end) return p;
     }
     let best: PredictionMsg | null = null;
-    let bestD = 2.5;
+    let bestD = 6;
     for (const p of buf) {
       const d = Math.abs(p.media_time - t);
       if (d < bestD) {

@@ -4,7 +4,7 @@ md 是 source of truth；本腳本把報告用到的 md 子集轉成 Word 原生
 標題層級用內建 Heading 樣式（可導覽/可生成目錄）、表格用真表格（Table Grid + 表頭底紋）、
 程式碼塊（架構圖）用 Consolas + 灰底、行內 **粗體**/*斜體*/*斜體*//`程式碼`。
 
-Usage: .venv/Scripts/python.exe tools/make_report_docx.py
+Usage: .venv/Scripts/python.exe tools/make_report_docx.py [src.md] [out.docx]
 """
 import re
 import sys
@@ -18,8 +18,17 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "docs" / "report.md"
-OUT = ROOT / "docs" / "report.docx"
+
+
+def _arg(n: int, default: Path) -> Path:
+    if len(sys.argv) > n:
+        p = Path(sys.argv[n])
+        return p if p.is_absolute() else ROOT / p
+    return default
+
+
+SRC = _arg(1, ROOT / "docs" / "report.md")
+OUT = _arg(2, ROOT / "docs" / "report.docx")
 
 MONO = "Consolas"
 BODY = "Calibri"

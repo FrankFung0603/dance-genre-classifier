@@ -12,7 +12,9 @@
 #   postgres  反饋入庫（👍/👎）
 #
 # GPU：backend 加 gpus: all → ONNX Runtime 走 CUDA EP；
-#      無 GPU 主機：刪掉 backend 的 gpus 區塊即為 CPU fallback 模式（同一份 image）。
+#      無 GPU 主機：刪掉 backend 的 gpus 區塊即為 CPU fallback 模式（同一份 image）；
+#      DANCE_ORT_PROVIDER=cpu 強制 CPU（有 GPU 也走 CPU，對照基準/演示用；
+#      刪掉此行即恢復自動 CUDA > DML > CPU）。
 name: dance
 
 services:
@@ -52,6 +54,7 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg2://dance:dance@postgres:5432/dance_feedback
       REDIS_URL: redis://redis:6379/0
+      # DANCE_ORT_PROVIDER: cpu    # 強制 CPU 推理（benchmark：F1 不變、~0.5s/clip）；設 cpu 即切換，預設自動 CUDA > DML > CPU
     volumes:
       - ./models:/app/models:ro   # 模型/pose task 不進 image，換模型免重建
     gpus: all                      # 無 GPU 主機刪除此行 → CPU fallback

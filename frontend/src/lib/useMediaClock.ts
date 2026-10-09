@@ -28,6 +28,10 @@ export function useMediaClock(opts: ClockOpts) {
   refs.current = opts;
   const prev = useRef({ t: -1, state: -1, ts: 0 });
   const playingSeen = useRef(false);
+  // 已送出 pause 且尚未送出 resume——resume 的偵測不能只認 2→1：
+  // 暫停久了之後按播放，影片 buffer 已被逐出，YouTube 會走 2→3（buffering）→1，
+  // 只認 2→1 會永遠漏掉 resume → backend worker 卡在 paused、從此沒有預測。
+  const pauseOutstanding = useRef(false);
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -41,15 +45,20 @@ export function useMediaClock(opts: ClockOpts) {
       const { t: prevT, state: prevSt, ts: prevTs } = prev.current;
 
       if (prevT >= 0) {
-        if (st === 2 && prevSt === 1) {
+        if (st === 2 && (prevSt === 1 || prevSt === 3)) {
+          // 1→2 乾淨暫停；3→2 = 播放前 buffering 中用戶又暫停（pause 冪等，重送無害）
           rep({ type: "pause" });
-        } else if (st === 1 && prevSt === 2) {
+          pauseOutstanding.current = true;
+        } else if (st === 1 && pauseOutstanding.current && prevSt !== 0 && prevSt !== -1) {
+          // 恢復播放：涵蓋 2→1 與 2→3→1 兩種路徑（0/-1 是初始載入，不送 resume）
           rep({ type: "resume", media_time: t });
+          pauseOutstanding.current = false;
           onPlay?.();
         } else if (st === 1 && (prevSt === 0 || prevSt === -1)) {
           onPlay?.();
         } else if (st === 0 && prevSt === 1) {
           rep({ type: "pause" }); // 播放自然結束：乾淨收工，避免後端把 EOF 誤報為錯誤
+          pauseOutstanding.current = false;
           onEnded?.();
         } else if (
           // seek：時間跳躍在 buffering（3）期間也要抓——拖進度條是 1→3→1，
