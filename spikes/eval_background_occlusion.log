@@ -1,0 +1,28 @@
+provider=DmlExecutionProvider | box=112 | n=1414
+  100/1414 | 35s | eta 460s
+  200/1414 | 70s | eta 427s
+  300/1414 | 106s | eta 395s
+  400/1414 | 143s | eta 362s
+  500/1414 | 178s | eta 326s
+  600/1414 | 216s | eta 293s
+  700/1414 | 253s | eta 258s
+  800/1414 | 293s | eta 225s
+  900/1414 | 330s | eta 189s
+  1000/1414 | 381s | eta 158s
+  1100/1414 | 420s | eta 120s
+  1200/1414 | 467s | eta 83s
+  1300/1414 | 506s | eta 44s
+  1400/1414 | 545s | eta 5s
+
+=== 背景依賴測試（keep_box=112px, n=1414）===
+原窗        : macro F1 0.8793 | acc 0.8741（sanity，應 ≈0.879）
+背景馬賽克  : macro F1 0.2036 | acc 0.2744 | flip 70.2% | conf 0.7831→0.9004
+主體馬賽克  : macro F1 0.0485 | acc 0.1704 | flip 83.5%
+背景遮蔽 flip 率（依真實類別）:
+  ballet       49.6%
+  breakdance   92.4%
+  contemporary 74.1%
+  hiphop       17.8%
+  salsa        99.7%
+  unknown      90.8%
+-> docs/background_occlusion_metrics.json

@@ -150,3 +150,21 @@ Phase 2/3 完成後，針對「5 類分辨是硬性要求」做的資料擴充 +
 - 對照 Phase 5：容器內 CPU fallback 611 ms/clip > 本機 487 ms（容器執行緒限制），量級一致
 - 結論：1 Hz 更新預算下 CPU 單窗 ~0.5–0.6s 仍可負擔；compose E2E 已驗證 CPU fallback 全流程可跑（無 GPU 機器可部署，只是延遲預算變緊）
 - train.py 順帶支援 `--device cpu`（FP32、無 AMP；預設 cuda 行為不變）；CPU 訓練對比實驗暫緩——GPU 側基準已有：7.7 win/s、376 s/epoch、8 epochs 共 ~50 分鐘
+
+## 重訓 v4（2026-10-09，抗背景依賴輪：bg-augment 續訓）
+
+**動機**：occlusion test（見 limitations「背景依賴」）顯示背景模糊使 macro F1 0.879→0.562、flip 34.7% → 以「背景破壞增強」續訓（train.py `--bg-augment`：中心保留區外隨機高斯模糊 r4–14 / 馬賽克 b14/28/56；breakdance 觸發機率 0.75、其餘 0.5——協議與測試同源但參數隨機化，防過擬合測試協議）。
+**訓練**：--init-from v3 best、全量 train 6,092 窗、4 epochs、lr head 1e-4 / backbone 1e-5、seed 42、8.3–8.5 win/s（增強零吞吐損失）；best = epoch 4 val 0.769（v3 val 0.759）。
+**事先定義達標線**（未達標不動部署檔）：bg-blur F1 ≥ 0.66 且 clean F1 ≥ 0.86。
+
+| 指標 | v3 | v4 | Δ |
+|---|---|---|---|
+| 乾淨 test macro F1（DML FP16） | 0.8793 | 0.8684 | −1.1（達標） |
+| 背景模糊 macro F1 | 0.562 | **0.835** | **+27.3** |
+| 背景模糊 flip 率 | 34.7% | 10.5% | −24.2 |
+| breakdance / salsa / ballet 背景模糊 flip | 82.5 / 32.3 / 35.8% | **2.3 / 0.0 / 9.6%** | 加強目標命中 |
+| contemporary 背景模糊 flip | 33.5% | 28.4% | 最弱剩此類 |
+
+- 乾淨 per-class：breakdance 0.929→0.963、salsa 0.984→0.998、unknown 0.965→0.984；代價集中 hiphop 0.831→0.759（recall 0.817→0.668，線上 hiphop 影片交替顯示可能變明顯）、ballet 0.810→0.766
+- **v4 已部署**（export_cam.py 雙輸出，parity 16/16；smoke：CUDA EP 82 ms、CAM grid 12/12、BBB 卡通全 unknown）；v3 回退檔齊：`models/dance_finetuned_v3.pt`、`dance_r2plus1d_fp16_cam_v3.onnx`、`fc_weights_v3.npy`（回退=三檔復位重啟）
+- 評測產物：`docs/v4_test_metrics.json`、`docs/background_occlusion_metrics_blur_v4.json`、`training/train_v4.log`

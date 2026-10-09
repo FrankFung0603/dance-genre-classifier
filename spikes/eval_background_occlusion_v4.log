@@ -1,0 +1,28 @@
+model=dance_r2plus1d_fp16_v4.onnx | provider=DmlExecutionProvider | box=112 | n=1414
+  100/1414 | 38s | eta 496s
+  200/1414 | 76s | eta 463s
+  300/1414 | 115s | eta 429s
+  400/1414 | 155s | eta 394s
+  500/1414 | 196s | eta 357s
+  600/1414 | 236s | eta 320s
+  700/1414 | 277s | eta 283s
+  800/1414 | 318s | eta 244s
+  900/1414 | 360s | eta 205s
+  1000/1414 | 401s | eta 166s
+  1100/1414 | 442s | eta 126s
+  1200/1414 | 484s | eta 86s
+  1300/1414 | 527s | eta 46s
+  1400/1414 | 568s | eta 6s
+
+=== 背景依賴測試（keep_box=112px, n=1414, corruption=gaussian_blur_r12）===
+原窗        : macro F1 0.8684 | acc 0.8614（sanity，應 ≈0.879）
+背景馬賽克  : macro F1 0.8348 | acc 0.8267 | flip 10.5% | conf 0.8158→0.6546
+主體馬賽克  : macro F1 0.1684 | acc 0.244 | flip 78.3%
+背景遮蔽 flip 率（依真實類別）:
+  ballet       9.6%
+  breakdance   2.3%
+  contemporary 28.4%
+  hiphop       16.6%
+  salsa        0.0%
+  unknown      1.1%
+-> docs/background_occlusion_metrics_blur_v4.json

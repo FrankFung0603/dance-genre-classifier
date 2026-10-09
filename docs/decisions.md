@@ -2,6 +2,9 @@
 
 ## 2026-10-09 CPU 模式與預測顯示語義
 
+23. **v4 抗背景依賴輪：train.py 加 `--bg-augment`（中心保留區外隨機模糊/馬賽克），v3 續訓後達標部署**。
+    Why: occlusion test 顯示背景模糊使 F1 0.879→0.562（breakdance flip 82.5%，弱標籤 + 每類場景集中的預期後果）。增強協議與測試同源但參數隨機化（模糊半徑/馬賽克塊/保留區大小皆隨機，防過擬合測試協議）；breakdance 觸發機率加重 0.75、其餘 0.5。**事先定義雙達標線（bg-blur F1 ≥0.66 且 clean ≥0.86）才部署，未達標不動部署檔**；部署檔/FC 權重先行備份（回退三檔：v3 .pt / cam onnx / fc_weights）。結果：bg-blur 0.835（+27.3）、flip 10.5%、clean 0.868（−1.1），雙過標部署。方法論教訓：評估協議須分離「資訊移除」與「分佈偏移」——馬賽克（OOD）曾誤導出 0.204 的悲觀值，模糊版才是可引用數字（見 limitations「背景依賴」）。
+
 22. **修「暫停後永久斷預測」三連 bug：前端 resume 偵測改用 pauseOutstanding 旗標（涵蓋 2→3→1）、main.py 轉發 resume 的 media_time、worker resume target 對 media_time=0/None 的處理**。
     Why: 暫停久了之後按播放，影片 buffer 已被逐出，YouTube IFrame 走 `2→3（buffering）→1`，前端只認 `2→1` 送 resume → resume 永遠不發 → worker 卡在 playing=False，從此沒有預測（短暫停 buffer 還在，直接 2→1，所以「暫停久了才會」——用戶實測歸納的相關性完全正確）。另兩個同族問題：main.py 轉發 resume 時丟掉 media_time → 暫停中拖進度條後恢復會重啟到舊暫停點（預測流永久落後）；worker `msg.get("media_time") or paused_at` 把合法的片頭 0 當 falsy。WS 協議重現驗證（pause → 20s 心跳 → resume）：帶 media_time 3.6s 恢復、不帶退化 paused_at 3.3s 恢復，暫停期間零預測（正確）。
 

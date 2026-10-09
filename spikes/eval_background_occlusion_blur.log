@@ -1,0 +1,28 @@
+provider=DmlExecutionProvider | box=112 | n=1414
+  100/1414 | 37s | eta 485s
+  200/1414 | 75s | eta 454s
+  300/1414 | 114s | eta 422s
+  400/1414 | 153s | eta 388s
+  500/1414 | 193s | eta 353s
+  600/1414 | 234s | eta 317s
+  700/1414 | 274s | eta 280s
+  800/1414 | 318s | eta 244s
+  900/1414 | 359s | eta 205s
+  1000/1414 | 399s | eta 165s
+  1100/1414 | 440s | eta 126s
+  1200/1414 | 480s | eta 86s
+  1300/1414 | 520s | eta 46s
+  1400/1414 | 562s | eta 6s
+
+=== 背景依賴測試（keep_box=112px, n=1414, corruption=gaussian_blur_r12）===
+原窗        : macro F1 0.8793 | acc 0.8741（sanity，應 ≈0.879）
+背景馬賽克  : macro F1 0.5616 | acc 0.5926 | flip 34.7% | conf 0.7831→0.5967
+主體馬賽克  : macro F1 0.1024 | acc 0.2023 | flip 80.5%
+背景遮蔽 flip 率（依真實類別）:
+  ballet       35.8%
+  breakdance   82.5%
+  contemporary 33.5%
+  hiphop       27.8%
+  salsa        32.3%
+  unknown      3.8%
+-> docs/background_occlusion_metrics_blur.json

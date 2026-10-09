@@ -6,7 +6,7 @@
 - 輸出：models/dance_finetuned.pt（state_dict + classes + val_f1）、training/log.csv
 
 Usage:
-    python train.py [--epochs 15] [--batch 16] [--seed 42] [--device cuda|cpu]
+    python train.py [--epochs 15] [--batch 16] [--seed 42] [--device cuda|cpu] [--bg-augment 0.5]
 """
 import argparse
 import csv
@@ -36,6 +36,34 @@ NUM_FRAMES, DECODE_SIZE, CROP_SIZE, FPS = 16, 256, 224, 8
 MEAN = torch.tensor([0.43216, 0.394666, 0.37645]).view(3, 1, 1, 1)
 STD = torch.tensor([0.22803, 0.221459, 0.216989]).view(3, 1, 1, 1)
 
+# 背景破壞增強（--bg-augment）：中心保留區外隨機模糊/馬賽克，抗背景依賴。
+# 依據 occlusion test（docs/limitations.md「背景依賴」）：breakdance 背景模糊 flip 82.5%，
+# 其餘類 27–36% → breakdance 用更高觸發機率。協議與測試同源但參數隨機化（防只背測試協議）。
+BG_AUG_PROB_BY_CLASS = {"breakdance": 0.75}
+
+
+def bg_corrupt(x: torch.Tensor) -> torch.Tensor:
+    """x uint8 (C,T,H,W) → 中心保留區外破壞（50% 高斯模糊 r4–14 / 50% 馬賽克 b14/28/56）。"""
+    xnp = x.permute(1, 2, 3, 0).numpy()  # T,H,W,C
+    T, H, W, _ = xnp.shape
+    keep = random.randint(100, 132)
+    y0, x0 = (H - keep) // 2, (W - keep) // 2
+    mask = np.ones((H, W), dtype=bool)
+    mask[y0:y0 + keep, x0:x0 + keep] = False
+    if random.random() < 0.5:
+        from PIL import Image, ImageFilter
+        r = random.uniform(4, 14)
+        bad = np.empty_like(xnp)
+        for t in range(T):
+            bad[t] = np.asarray(Image.fromarray(xnp[t]).filter(ImageFilter.GaussianBlur(r)))
+    else:
+        b = random.choice([14, 28, 56])
+        small = xnp.reshape(T, H // b, b, W // b, b, 3).mean(axis=(2, 4)).astype(np.uint8)
+        bad = np.repeat(np.repeat(small, b, axis=1), b, axis=2)
+    xnp = xnp.copy()
+    xnp[:, mask] = bad[:, mask]
+    return torch.from_numpy(np.ascontiguousarray(xnp)).permute(3, 0, 1, 2)
+
 
 def find_ffmpeg() -> str:
     return glob.glob(str(ROOT / "tools" / "ffmpeg*" / "bin" / "ffmpeg.exe"))[0]
@@ -61,11 +89,13 @@ def decode_window(video_path: str, t_start: float) -> np.ndarray:
 class DanceWindowDataset(Dataset):
     """讀 memmap 快取（首選，worker 內 lazy-open）或即時 ffmpeg 解碼（fallback）。"""
 
-    def __init__(self, rows: list[dict], train: bool, cache: dict | None = None):
+    def __init__(self, rows: list[dict], train: bool, cache: dict | None = None,
+                 bg_aug: float | None = None):
         self.rows = rows
         self.train = train
         self._cache = cache  # {"npy_path": str, "key2row": dict}（只傳路徑，不傳 mmap 物件）
         self._arr = None
+        self._bg_aug = bg_aug  # None = 關；float = 觸發機率（僅 train 分支生效）
 
     def _open(self):
         if self._arr is None:
@@ -89,6 +119,9 @@ class DanceWindowDataset(Dataset):
             x = x[..., top:top + CROP_SIZE, left:left + CROP_SIZE]
             if random.random() < 0.5:
                 x = torch.flip(x, dims=[3])  # (C,T,H,W) 的 W 維
+            if self._bg_aug is not None and \
+                    random.random() < BG_AUG_PROB_BY_CLASS.get(r["genre"], self._bg_aug):
+                x = bg_corrupt(x)
         else:
             off = (DECODE_SIZE - CROP_SIZE) // 2
             x = x[..., off:off + CROP_SIZE, off:off + CROP_SIZE]
@@ -140,6 +173,9 @@ def main() -> None:
                     help="data/last_append_keys.json（extract_windows --append 產出）：增量輪以新窗口為訓練主體")
     ap.add_argument("--replay-frac", type=float, default=0.3,
                     help="增量輪混入的舊 train 窗口比例（防災難性遺忘；0 = 純新資料，不建議）")
+    ap.add_argument("--bg-augment", type=float, default=0.0,
+                    help="背景破壞增強機率（0 = 關，抗背景依賴輪用，如 0.5）；"
+                         "breakdance 依 BG_AUG_PROB_BY_CLASS 加重。僅 train 分支生效，val/test 不動")
     args = ap.parse_args()
 
     random.seed(args.seed)
@@ -195,7 +231,8 @@ def main() -> None:
 
     def make_loader(batch: int, shuffle: bool, ds_train: bool, sampler_=None):
         return DataLoader(
-            DanceWindowDataset(rows["train" if ds_train else "val"], train=ds_train, cache=cache),
+            DanceWindowDataset(rows["train" if ds_train else "val"], train=ds_train, cache=cache,
+                               bg_aug=(args.bg_augment or None) if ds_train else None),
             batch_size=batch, num_workers=args.workers, pin_memory=(device == "cuda"),
             sampler=sampler_, shuffle=shuffle and sampler_ is None,
             persistent_workers=True, prefetch_factor=4, timeout=60,

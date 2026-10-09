@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-10-09T15:44:30",
+  "provider": "DmlExecutionProvider",
+  "n_test": 1414,
+  "keep_box": 112,
+  "mosaic_block": 28,
+  "orig_macro_f1": 0.8793,
+  "bg_mosaic_macro_f1": 0.2036,
+  "sub_mosaic_macro_f1": 0.0485,
+  "orig_accuracy": 0.8741,
+  "bg_mosaic_accuracy": 0.2744,
+  "sub_mosaic_accuracy": 0.1704,
+  "bg_flip_rate": 0.7016,
+  "sub_flip_rate": 0.8352,
+  "mean_conf_orig": 0.7831,
+  "mean_conf_bg_mosaic": 0.9004,
+  "bg_flip_rate_by_class": {
+    "ballet": 0.4958,
+    "breakdance": 0.924,
+    "contemporary": 0.741,
+    "hiphop": 0.1784,
+    "salsa": 0.9967,
+    "unknown": 0.9076
+  },
+  "bg_macro_f1_report": {
+    "ballet": {
+      "precision": 1.0,
+      "recall": 0.29583333333333334,
+      "f1-score": 0.4565916398713826,
+      "support": 240.0
+    },
+    "breakdance": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 171.0
+    },
+    "contemporary": {
+      "precision": 0.4489795918367347,
+      "recall": 0.23741007194244604,
+      "f1-score": 0.31058823529411766,
+      "support": 278.0
+    },
+    "hiphop": {
+      "precision": 0.20357751277683134,
+      "recall": 0.991701244813278,
+      "f1-score": 0.33780918727915193,
+      "support": 241.0
+    },
+    "salsa": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 300.0
+    },
+    "unknown": {
+      "precision": 0.5454545454545454,
+      "recall": 0.06521739130434782,
+      "f1-score": 0.11650485436893204,
+      "support": 184.0
+    },
+    "accuracy": 0.2743988684582744,
+    "macro avg": {
+      "precision": 0.36633527501135194,
+      "recall": 0.26502700689890085,
+      "f1-score": 0.2035823194689307,
+      "support": 1414.0
+    },
+    "weighted avg": {
+      "precision": 0.3636790265017432,
+      "recall": 0.2743988684582744,
+      "f1-score": 0.21129733403044954,
+      "support": 1414.0
+    }
+  }
+}
